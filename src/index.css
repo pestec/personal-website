@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Warm graphite base — deliberately not blue-black, avoids the default "AI dark mode" tint */
+  --color-ink-950: #0a0908;
+  --color-ink-900: #131110;
+  --color-ink-800: #1c1917;
+  --color-ink-700: #2a2521;
+
+  --color-mist-50: #f4f0e8;
+  --color-mist-200: #d2c8b8;
+  --color-mist-400: #9c9284;
+  --color-mist-600: #6b6357;
+
+  /* Brass/gold — a single deliberate accent instead of a purple+cyan pair */
+  --color-accent-400: #e0bd7d;
+  --color-accent-500: #c9a15a;
+  --color-accent-600: #a67f3d;
+
+  /* Muted sage — used sparingly as the one cool counter-note */
+  --color-moss-400: #a7bfa3;
+  --color-moss-500: #87a482;
+
+  --animate-blob: blob 26s ease-in-out infinite;
+  --animate-sheen: sheen 2.2s ease-in-out infinite;
+
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(5%, -7%) scale(1.1);
+    }
+    66% {
+      transform: translate(-4%, 5%) scale(0.92);
+    }
+  }
+
+  @keyframes sheen {
+    0%,
+    100% {
+      transform: translateX(-120%) skewX(-12deg);
+    }
+    50% {
+      transform: translateX(220%) skewX(-12deg);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ink-950);
+    color: var(--color-mist-50);
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-accent-500);
+    color: var(--color-ink-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  /*
+   * Liquid-glass material: layered gradient fill (not a flat tint), a
+   * gradient rim-light border via a masked pseudo-element (plain `border`
+   * can't carry a gradient without squaring off the radius), an inner
+   * top highlight to fake a curved refractive edge, and a soft outer
+   * shadow for lift. This is closer to a real glass pane catching light
+   * than a single translucent rectangle.
+   */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(
+      165deg,
+      color-mix(in oklab, white 11%, transparent) 0%,
+      color-mix(in oklab, white 4%, transparent) 55%,
+      color-mix(in oklab, white 7%, transparent) 100%
+    );
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 20%, transparent),
+      inset 0 -1px 0 color-mix(in oklab, white 4%, transparent),
+      0 12px 40px -8px rgba(0, 0, 0, 0.55);
+  }
+
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      165deg,
+      color-mix(in oklab, white 45%, transparent) 0%,
+      color-mix(in oklab, white 6%, transparent) 45%,
+      color-mix(in oklab, white 18%, transparent) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .glass-strong {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(
+      165deg,
+      color-mix(in oklab, white 16%, transparent) 0%,
+      color-mix(in oklab, white 7%, transparent) 55%,
+      color-mix(in oklab, white 10%, transparent) 100%
+    );
+    backdrop-filter: blur(26px) saturate(150%);
+    -webkit-backdrop-filter: blur(26px) saturate(150%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 26%, transparent),
+      0 16px 48px -10px rgba(0, 0, 0, 0.6);
+  }
+
+  .glass-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      165deg,
+      color-mix(in oklab, white 50%, transparent) 0%,
+      color-mix(in oklab, white 8%, transparent) 45%,
+      color-mix(in oklab, white 22%, transparent) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Diagonal light sweep across a glass surface on hover — the "liquid" cue */
+  .glass-sheen {
+    position: absolute;
+    inset: -1px;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .glass-sheen::after {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: 0;
+    width: 24%;
+    height: 220%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in oklab, white 16%, transparent),
+      transparent
+    );
+    transform: translateX(-220%) skewX(-12deg);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .group:hover .glass-sheen::after {
+    transform: translateX(340%) skewX(-12deg);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
