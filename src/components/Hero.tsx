@@ -16,7 +16,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[88dvh] flex-col items-center justify-center px-6 pt-24 pb-10 text-center"
+      className="relative flex min-h-[88dvh] flex-col items-center justify-center gap-10 px-6 pt-24 pb-10 text-center"
     >
       <motion.div
         variants={container}
@@ -84,7 +84,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1, duration: 0.6 }}
-        className="absolute bottom-8 flex flex-col items-center gap-2 text-mist-400 transition-colors hover:text-mist-50"
+        className="flex flex-col items-center gap-2 text-mist-400 transition-colors hover:text-mist-50"
         aria-label="Scroll to about section"
       >
         <span className="text-xs uppercase tracking-[0.2em]">Scroll</span>
